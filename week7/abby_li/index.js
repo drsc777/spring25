@@ -4,56 +4,61 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const mongoose = require('mongoose');
-const Message = require('./models/message');
+const mongoose = require("mongoose");
+const cors = require('cors');
 
-// Connect to MongoDB Atlas
-async function connectDB() {
-  try {
-    await mongoose.connect('mongodb+srv://abbyzyl777:helloworld@cluster0.g8ppq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
-    console.log('Connected to MongoDB Atlas');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-  }
-}
+// Enable CORS for all routes
+app.use(cors());
 
-connectDB();
+// Serve static files
+app.use(express.static(__dirname));
 
-app.get('/', (req, res) => {
+const Schema = mongoose.Schema;
+
+const messageSchema = new Schema({
+  content: { type: String },
+  timestamp: { type: Date, default: Date.now }
+})
+
+const messageModel = mongoose.model("Message", messageSchema)
+
+app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
 
-// Socket.IO connection handling
-io.on('connection', async (socket) => {
+// Route for chat history page
+app.get('/history', (req, res) => {
+  res.sendFile(__dirname + '/history.html');
+});
+
+app.get('/messages', async function(req, res){
+  res.json(await messageModel.find());
+});
+
+io.on('connection', function(socket){
   console.log('User connected');
-
+  
   // Send history messages
-  try {
-    const messages = await Message.find().sort({ timestamp: -1 }).limit(10);
+  messageModel.find().sort({ timestamp: -1 }).limit(10).then(messages => {
     socket.emit('load messages', messages.reverse());
-  } catch (error) {
+  }).catch(error => {
     console.error('Error loading messages:', error);
-  }
-
-  // Handle new messages
-  socket.on('chat message', async (msg) => {
-    try {
-      // Save message to database
-      const message = new Message({ content: msg });
-      await message.save();
-      
-      // Broadcast message to all clients
-      io.emit('chat message', msg);
-    } catch (error) {
-      console.error('Error saving message:', error);
-    }
   });
-
+  
+  socket.on('chat message', function(msg){
+    const message = new messageModel();
+    message.content = msg;
+    message.save().then(m => {
+      io.emit('chat message', msg);
+    })
+  });
+  
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
 });
 
-server.listen(3000, () => {
-  console.log('Server is running at http://localhost:3000');
+server.listen(3000, async function(){
+  await mongoose.connect("mongodb+srv://sam:helloworld@cluster0.ytnrk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+  console.log('listening on *:3000');
 });
