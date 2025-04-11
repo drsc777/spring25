@@ -58,35 +58,9 @@
       #messages > li:nth-child(odd) { 
         background: #efefef; 
       }
-      
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #f1f1f1;
-      }
-      
-      .header h1 {
-        margin: 0;
-        font-size: 1.5rem;
-      }
-      
-      .history-link {
-        color: #0066cc;
-        text-decoration: none;
-      }
-      
-      .history-link:hover {
-        text-decoration: underline;
-      }
     </style>
   </head>
   <body>
-    <div class="header">
-      <h1>Real-time Chat</h1>
-      <a href="/history" class="history-link">View Full History</a>
-    </div>
     <ul id="messages"></ul>
     <form id="form" action="">
       <input id="input" autocomplete="off" placeholder="Type a message..." /><button>Send</button>
