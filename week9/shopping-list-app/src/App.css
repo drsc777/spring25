@@ -5,6 +5,34 @@
   text-align: center;
 }
 
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
 .card {
   padding: 1rem;
   margin: 1rem 0;
@@ -50,7 +78,7 @@
   background-color: rgba(144, 238, 144, 0.6);
 }
 
-input {
+input, .select-input {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -60,4 +88,57 @@ input {
 input[type="number"] {
   width: 80px;
   flex-grow: 0;
+}
+
+.date-input {
+  width: 130px;
+  flex-grow: 0;
+}
+
+.select-input {
+  width: 120px;
+  flex-grow: 0;
+}
+
+.category-filter {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.item-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.item-name {
+  font-weight: 500;
+  min-width: 120px;
+  text-align: left;
+}
+
+.item-category {
+  color: #666;
+  font-size: 0.9em;
+  background: #e0e0e0;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.item-date {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.item-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.item-cost {
+  font-weight: 500;
+  color: #444;
 }
